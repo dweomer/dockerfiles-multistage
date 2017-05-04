@@ -1,0 +1,12 @@
+# docker build --tag dweomer/golang-example:thick --file Dockerfile.multistage .
+
+# TOOLING + SOURCE
+FROM golang:1.8 AS reactor
+RUN set -xe \
+ && go get -v github.com/golang/example/hello
+RUN /go/bin/hello
+
+# SLIM CONTAINER GOODNESS
+FROM scratch AS app
+COPY --from=reactor /go/bin/hello /
+ENTRYPOINT ["/hello"]
